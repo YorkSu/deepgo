@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Register API
-  =====
+  ======
 
   Custom API, containing methods for handling register
 """

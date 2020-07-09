@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """TensorFlow Random API
-  =====
+  ======
 
   TensorFlow API, containing Random methods
 """

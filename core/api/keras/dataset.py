@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Keras Dataset
-  =====
+  ======
 
   Keras Datasets, containing usual dataset, such as MNIST and CIFAR
 """

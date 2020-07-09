@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Keras Random API
-  =====
+  ======
 
   Keras API, containing Random methods
 """

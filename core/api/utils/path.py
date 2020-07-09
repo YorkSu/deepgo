@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Path API
-  =====
+  ======
 
   Custom API, containing methods for handling path
 """

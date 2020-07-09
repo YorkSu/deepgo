@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Word API
-  =====
+  ======
 
   Custom API, containing methods for handling String
 """

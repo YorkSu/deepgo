@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Keras Config API
-  =====
+  ======
 
   Keras API, containing mathods for handling Config
 """

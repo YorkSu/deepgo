@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """IO
-  =====
+  ======
 
   Deep Go IO
 """
@@ -107,7 +107,7 @@ class Json(object):
       Return the value of the specified key.
       If the key does not exist, return None.
     """
-    return self._dict[key] if key in self._dict else None
+    return self._dict.get(key)
 
   def load(self):
     """Json.load
