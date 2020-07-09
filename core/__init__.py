@@ -7,4 +7,5 @@
 
 
 from deepgo.core import api
+from deepgo.core import layer
 

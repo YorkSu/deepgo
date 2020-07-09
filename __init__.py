@@ -23,4 +23,5 @@ del _os, _sys
 from deepgo import core
 
 from deepgo.core import api
+from deepgo.core import layer
 
