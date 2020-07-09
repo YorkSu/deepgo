@@ -6,6 +6,22 @@
 """
 
 
+__all__ = [
+    'Activation',
+    'ActivityRegularization',
+    'Dense',
+    'Dropout',
+    'Flatten',
+    'Lambda',
+    'Masking',
+    'Permute',
+    'RepeatVector',
+    'Reshape',
+    'SpatialDropout1D',
+    'SpatialDropout2D',
+    'SpatialDropout3D',]
+
+
 from tensorflow.keras import layers as kl
 
 

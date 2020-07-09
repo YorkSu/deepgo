@@ -20,8 +20,11 @@ if this_dir not in _sys.path:
 del _os, _sys
 
 
+from deepgo import app
 from deepgo import core
 from deepgo import framework
+
+from deepgo.app import dataset as ds
 
 from deepgo.core import api
 from deepgo.core import exception

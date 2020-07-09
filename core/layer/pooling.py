@@ -6,6 +6,33 @@
 """
 
 
+__all__ = [
+    'AvgPool1D',
+    'AveragePooling1D',
+    'AvgPool2D',
+    'AveragePooling2D',
+    'AvgPool3D',
+    'AveragePooling3D',
+    'MaxPool1D',
+    'MaxPooling1D',
+    'MaxPool2D',
+    'MaxPooling2D',
+    'MaxPool3D',
+    'MaxPooling3D',
+    'GlobalAvgPool1D',
+    'GlobalAveragePooling1D',
+    'GlobalAvgPool2D',
+    'GlobalAveragePooling2D',
+    'GlobalAvgPool3D',
+    'GlobalAveragePooling3D',
+    'GlobalMaxPool1D',
+    'GlobalMaxPooling1D',
+    'GlobalMaxPool2D',
+    'GlobalMaxPooling2D',
+    'GlobalMaxPool3D',
+    'GlobalMaxPooling3D',]
+
+
 from tensorflow.keras import layers as kl
 
 

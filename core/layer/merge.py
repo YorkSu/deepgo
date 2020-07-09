@@ -6,6 +6,17 @@
 """
 
 
+__all__ = [
+    '_Merge',
+    'Add',
+    'Average',
+    'Concatenate',
+    'Maximum',
+    'Minimum',
+    'Multiply',
+    'Subtract',]
+
+
 from tensorflow.keras import layers as kl
 from tensorflow.python.keras.layers.merge import _Merge as _M
 
