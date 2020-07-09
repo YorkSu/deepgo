@@ -19,3 +19,8 @@ if this_dir not in _sys.path:
   _sys.path.append(this_dir)
 del _os, _sys
 
+
+from deepgo import core
+
+from deepgo.core import api
+
