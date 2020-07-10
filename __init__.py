@@ -30,6 +30,7 @@ from deepgo.core import api
 from deepgo.core import exception
 from deepgo.core import io
 from deepgo.core import layer
+from deepgo.core.api import np
 
 from deepgo.framework import log
 from deepgo.framework.config import Config

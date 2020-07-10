@@ -1322,7 +1322,7 @@ def TimeDistributed(
       **kwargs)
 
 
-class Warpper(kl.Wrapper):
+class Wrapper(kl.Wrapper):
   """Abstract wrapper base class.
 
     Wrappers take another layer and augment it in various ways.

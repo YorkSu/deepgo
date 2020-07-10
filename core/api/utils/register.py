@@ -21,7 +21,7 @@ def get_dataset(name):
       name: str, name of the dataset.
 
     Returns:
-      nnt.Dataset or None
+      DeepGo.Dataset or Function or None
   """
   return _CUSTOM_DATASET.get(name)
 
