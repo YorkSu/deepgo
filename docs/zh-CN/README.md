@@ -21,7 +21,46 @@ Deep Go 是一个机器学习和深度学习的框架。
 3. 使用Anaconda安装依赖，推荐创建新的虚拟环境。
 
 ```cmd
-conda install --yes --file requirements.txt
+conda create -n deepgo python=3.7.7 --yes
+conda activate deepgo
+conda install tensorflow-gpu=2.1.0 --yes
+```
+
+`deepgo` 是虚拟环境的名字，你可以使用你喜欢的名字。
+
+### 错误处理
+
+#### 错误1
+
+```cmd
+INTEL MKL ERROR: 操作系统无法运行 %1。 mkl_intel_thread.dll.
+Intel MKL FATAL ERROR: Cannot load mkl_intel_thread.dll.
+```
+
+你需要将以下文件复制到这个文件夹: `~/Anaconda/envs/deepgo`
+
+* `~/Anaconda/envs/deepgo/Library/bin/libiomp5md.dll`
+* `~/Anaconda/envs/deepgo/Library/bin/cublas64_10.dll`
+* `~/Anaconda/envs/deepgo/Library/bin/cublasLt64_10.dll`
+* `~/Anaconda/envs/deepgo/Library/bin/cudart64_101.dll`
+* `~/Anaconda/envs/deepgo/Library/bin/cudatoolkit_config.yaml`
+* `~/Anaconda/envs/deepgo/Library/bin/cudnn64_7.dll`
+* `~/Anaconda/envs/deepgo/Library/bin/cufft64_10.dll`
+* `~/Anaconda/envs/deepgo/Library/bin/cufftw64_10.dll`
+* `~/Anaconda/envs/deepgo/Library/bin/curand64_10.dll`
+* `~/Anaconda/envs/deepgo/Library/bin/cusolver64_10.dll`
+* `~/Anaconda/envs/deepgo/Library/bin/cusparse64_10.dll`
+
+#### 错误2
+
+```cmd
+module 'tensorflow' has no attribute 'compat'
+```
+
+你需要降级这个包 `tensorflow-estimator` 到 `2.1.0`
+
+```cmd
+pip install tensorflow-estimator==2.1.0
 ```
 
 ## 使用
