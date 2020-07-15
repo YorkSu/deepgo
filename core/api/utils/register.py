@@ -12,7 +12,7 @@ from tensorflow.keras.utils import get_custom_objects
 _CUSTOM_DATASET = {}
 
 
-def get_dataset(name):
+def get_dataset(name: str):
   """api.utils.get_dataset
 
     Get the dataset class or define function from name
@@ -23,7 +23,7 @@ def get_dataset(name):
     Returns:
       DeepGo.Dataset or Function or None
   """
-  return _CUSTOM_DATASET.get(name)
+  return _CUSTOM_DATASET.get(name.lower())
 
 
 def register(name, clas):

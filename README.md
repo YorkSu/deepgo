@@ -17,7 +17,7 @@ Deep Go is an framework for machine learning and deep learning.
 ## Installation
 
 1. Clone Deep Go into your computer. You can download the zip file or use `GitHub Desktop` to clone it.
-2. Add Deep Go folder to your `PYTHONHOME`
+2. Add Deep Go folder to your `PYTHONPATH`
 3. Install the requirements by using `Anaconda`. New environment is Recommended.
 
 ```cmd

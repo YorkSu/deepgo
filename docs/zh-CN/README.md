@@ -17,7 +17,7 @@ Deep Go 是一个机器学习和深度学习的框架。
 ## 安装
 
 1. 将Deep Go克隆到本地，下载zip或使用`GitHub Desktop`进行克隆
-2. 将Deep Go文件夹添加到系统变量`PYTHONHOME`
+2. 将Deep Go文件夹添加到系统变量`PYTHONPATH`
 3. 使用Anaconda安装依赖，推荐创建新的虚拟环境。
 
 ```cmd
