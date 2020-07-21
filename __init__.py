@@ -5,7 +5,7 @@
   An framework for machine learning and deep learning.
   
   Version:
-    1.0 - alpha
+    4.1 - alpha
 
   Author:
     York Su
@@ -25,6 +25,7 @@ from deepgo import core
 from deepgo import framework
 
 from deepgo.app import dataset as ds
+from deepgo.app import train
 
 from deepgo.core import api
 from deepgo.core import exception
@@ -35,4 +36,5 @@ from deepgo.core.api import np
 from deepgo.framework import log
 from deepgo.framework.config import Config
 from deepgo.framework.dataset import Dataset
+from deepgo.framework.generator import Generator
 

@@ -9,7 +9,7 @@
 Deep Go is an framework for machine learning and deep learning.
 
 <p align='center'>
-<a href="docs/more.md"><img src="https://img.shields.io/badge/version-1.0.0a-yellow.svg"></a>
+<a href="docs/more.md"><img src="https://img.shields.io/badge/version-4.1a-yellow.svg"></a>
 <a href="docs/more.md"><img src="https://img.shields.io/badge/TensorFlow-=2.1.0-green.svg"></a>
 <a href="docs/more.md"><img src="https://img.shields.io/badge/License-Apache--2.0-green.svg"></a>
 </p>

@@ -6,6 +6,9 @@
 """
 
 
+import h5py
+
+from deepgo.core.api import np
 from deepgo.core.layer import Model
 
 
@@ -15,6 +18,7 @@ from deepgo.core.layer import Model
 UNKNOWN = 0
 INIT = 1
 TYPE = 2
+INDEX = 3
 
 
 class CoreError(Exception):
@@ -51,21 +55,6 @@ class CoreError(Exception):
 
   def __str__(self):
     return f"{self.__class__.__name__}(CODE: {self._code}, NAME: {self._name}, MSG: {self._message})"
-
-
-class Assertion(object):
-  """Assertion
-
-    断言类的父类
-  """
-  def __init__(self):
-    pass
-  
-  def __call__(self, obj):
-    self.call(obj)
-
-  def call(self, obj):
-    raise NotImplementedError
 
 
 # ================================
@@ -115,14 +104,71 @@ class TypeError(CoreError):
     super().__init__(message, TYPE, name)
 
 
-class AssertModel(Assertion):
-  """AssertModel
+class IndexError(CoreError):
+  """IndexError
 
-    断言为Model类
+    索引错误
+
+    Args:
+      message: Str. 描述错误的消息
+      name: Str, default __name__. 可指定名称
+        传入`__name__`可用于定位日志的发送位置
   """
-  def call(self, obj):
-    if not isinstance(obj, Model):
-      raise TypeError(f"Expected Model instance, got {type(obj)}")
+  def __init__(self, message='Index out of range', name=__name__):
+    super().__init__(message, INDEX, name)
+
+
+# ================================
+# Assertions
+# ================================
+
+
+def assert_h5_dataset(obj):
+  """Ensure Object is a h5py.Dataset
+
+    Raises:
+      DeepGo.TypeError
+  """
+  if not isinstance(obj, h5py.Dataset):
+    raise TypeError(", ".join([
+        f"Expected h5py.Dataset",
+        f"got {obj.__class__.__name__}"]))
+
+
+def assert_h5_group(obj):
+  """Ensure Object is a h5py.File or h5py.Group
+
+    Raises:
+      DeepGo.TypeError
+  """
+  if not isinstance(obj, (h5py.File, h5py.Group)):
+    raise TypeError(", ".join([
+        f"Expected h5py.File or h5py.Group",
+        f"got {obj.__class__.__name__}"]))
+
+
+def assert_model(obj):
+  """Ensure Object is a keras.Model
+
+    Raises:
+      DeepGo.TypeError
+  """
+  if not isinstance(obj, Model):
+    raise TypeError(", ".join([
+        f"Expected Model",
+        f"got {obj.__class__.__name__}"]))
+
+
+def assert_np(obj):
+  """Ensure Object is a np.ndarray
+
+    Raises:
+      DeepGo.TypeError
+  """
+  if not isinstance(obj, np.ndarray):
+    raise TypeError(", ".join([
+        f"Expected ndarray",
+        f"got {obj.__class__.__name__}"]))
 
 
 if __name__ == "__main__":

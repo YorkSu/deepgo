@@ -8,10 +8,11 @@
 
 import math
 
+from deepgo.core.abcs import Manager
 from deepgo.core.api import np
 
 
-class Generator(object):
+class Generator(Manager):
   """Generator
 
     数据生成器
@@ -25,8 +26,8 @@ class Generator(object):
       **kwargs: Any. 任意参数，自动忽略
   """
   def __init__(self,
-        x: np.array,
-        y: np.array,
+        x: np.ndarray,
+        y: np.ndarray,
         batch_size: int,
         shuffle=True,
         aug=None,

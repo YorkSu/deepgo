@@ -8,13 +8,14 @@
 
 import time
 
+from deepgo.core.abcs import Manager
 from deepgo.core.api import set_learning_phase
 from deepgo.core.layer import Model
 from deepgo.framework.config import Config
 from deepgo.framework.generator import Generator
 
 
-class Trainer(object):
+class Trainer(Manager):
   """Abstract Trainer Class
   
     Args:

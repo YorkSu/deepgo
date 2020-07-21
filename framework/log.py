@@ -10,8 +10,10 @@ import os
 import logging
 from logging import handlers
 
+from deepgo.core.abcs import Manager
 
-class Logger(object):
+
+class Logger(Manager):
   """Logger
   
     日志工具
@@ -89,6 +91,7 @@ class Logger(object):
       handler.setFormatter(formatter)
       logger.addHandler(handler)
     # Console Handler
+    # TODO: use io.StreamIO
     console = logging.StreamHandler()
     console.setLevel(logging.INFO)
     console.setFormatter(formatter)

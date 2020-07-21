@@ -6,11 +6,12 @@
 """
 
 
+from deepgo.core.abcs import Manager
 from deepgo.core.api import get_floatx
 from deepgo.core.api import np
 
 
-class Dataset(object):
+class Dataset(Manager):
   """Dataset
 
     数据集对象的父类

@@ -6,16 +6,17 @@
 """
 
 
-from deepgo.core.io import Json
+from deepgo.core.abcs import Manager
+from deepgo.core.io import JsonIO
 
 
-class Config(object):
+class Config(Manager):
   """Config
 
-    Config Handler
+    Config Manager
 
     Args:
-      json: io.Json, Dict, or Filename.
+      json: io.JsonIO, Dict, or Filename.
       **kwargs: keyword argument, cover the json config
   """
   def __init__(self, json={}, **kwargs):
@@ -34,10 +35,10 @@ class Config(object):
     self._dict[key] = value
   
   def update(self, json):
-    if isinstance(json, Json):
+    if isinstance(json, JsonIO):
         self._dict.update(json.dict)
     elif isinstance(json, dict):
         self._dict.update(json)
     elif isinstance(json, str):
-        self._dict.update(Json(json).dict)
+        self._dict.update(JsonIO(json).dict)
 
