@@ -14,453 +14,287 @@ from deepgo.core.abcs import Manager
 
 
 class Logger(Manager):
-  """Logger
-  
-    日志工具
-  """
-  def __init__(self, **kwargs):
-    self._filename = ''
-    self._fullname = ''
-    self._detial = True
-    self._suffix = '.log'
-    self._filemode = 'a+'
-    self._fmt = ''
-    self._datefmt = ''
-    self._built = False
-    self._no_init_warning = False
-    # Init StreamHandler
-    logging.basicConfig(level=logging.INFO)
-    
-  def _check_built(self):
-    if not self._built and not self._no_init_warning:
-      print("[WARNING] Logger has not been built. This MSG will only log once.")
-      self._no_init_warning = True
+  """Log Manager"""
+  built = False
+  init_warnings = False
 
-  def build(self, filename: str, detail=True, suffix='.log', filemode='a+',
+  @staticmethod
+  def assert_built():
+    """Assert Logger is built"""
+    if Logger.built:
+      return
+    if Logger.init_warnings:
+      return
+    logging.basicConfig(level=logging.DEBUG)
+    print(", ".join([
+        "[WARNING] Logger has not been built",
+        "this message will only log once."]))
+    Logger.init_warnings = True
+
+  @staticmethod
+  def build(
+        filename="",
+        file_level=logging.DEBUG,
+        stream_level=logging.INFO,
+        suffix='.log',
+        mode='a+',
         fmt="%(asctime)s.%(msecs)03d [%(levelname)s] >%(name)s: %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S"):
-    """Logger.build
-    
-      日志工具初始化函数。
+        datefmt="%Y-%m-%d %H:%M:%S",
+        maxBytes=2 ** 24,
+        backupCount=1000):
+    """Initialize the log tool
 
       Args:
-        filename: Str. 日志文件名，包含路径。如果文件名不带有后缀名，会自动补上
-            若文件名为空，则不输出日志文件
-        detail: Bool. 日志写文件粒度。默认最低为DEBUG。
-            若值为False，则写文件的最低等级为INFO
-        suffix: Str. 日志文件后缀名，默认为'.log'
-        filemode: Str. 日志文件的打开方式，同open.mode，默认'a+'为追加写入
-        fmt: Str. 日志输出的格式，详见python.logging.Formatter
-        datefmt: Str. 日志输出格式中的时间格式，详见python.logging.Formatter
+        filename: Str. The log filename
+            If not have a suffix, will auto replenished
+            If "", will not output the log file
+        file_level: Integer. The log file level
+            file_level must less or equal to stream_level
+        stream_level: Integer. The log stream level
+        suffix: Str. the log file suffix, default '.log'
+        mode: Str. the log file mode
+        fmt: Str. the log format, see python.logging.Formatter
+        datefmt: Str. the log date format, see python.logging.Formatter
+        maxBytes: Integer. The maximum size of the log file
+        backupCount: Integer. The maximun backup file count.
     """
-    if self._built:
+    if file_level > stream_level:
+      print(", ".join([
+        f"[WARNING]",
+        f"excepted file_level <= stream_level"
+        f"got {file_level}, {stream_level}"]))
       return
-    self._filename = filename
-    self._detial = detail
-    self._suffix = suffix
-    self._filemode = filemode
-    self._fmt = fmt
-    self._datefmt = datefmt
-    self._fullname = self._filename
-    # Ensure the filename has suffix
-    if self._fullname and self._fullname[len(suffix):] != suffix:
-      self._fullname += suffix
-    # Main Logger
+    if filename:
+      _path, _file = os.path.split(filename)
+      _name, _ext = os.path.splitext(_file)
+      if not os.path.exists(_path):
+        os.makedirs(_path)
+      if _ext != suffix:
+        filename = os.path.join(_path, _name) + suffix
     logger = logging.getLogger()
-    if self._detial:
-      logger.setLevel(logging.DEBUG)
-    else:
-      logger.setLevel(logging.INFO)
-    # Remove Init StreamHandler
-    logger.removeHandler(logger.handlers[0])
-    # Formatter
+    for handler in logger.handlers:
+      logger.removeHandler(handler)
+    logger.setLevel(file_level)
     formatter = logging.Formatter(
-        fmt=self._fmt,
-        datefmt=self._datefmt)
-    # File handler
-    if self._fullname:
+        fmt=fmt,
+        datefmt=datefmt)
+    if filename:
       handler = handlers.RotatingFileHandler(
-          self._fullname,
-          mode=self._filemode,
-          maxBytes=2 ** 25,
-          backupCount=1000)
-      if self._detial:
-        handler.setLevel(logging.DEBUG)
-      else:
-        handler.setLevel(logging.INFO)
+          filename,
+          mode=mode,
+          maxBytes=maxBytes,
+          backupCount=backupCount)
+      handler.setLevel(file_level)
       handler.setFormatter(formatter)
       logger.addHandler(handler)
-    # Console Handler
-    # TODO: use io.StreamIO
-    console = logging.StreamHandler()
-    console.setLevel(logging.INFO)
-    console.setFormatter(formatter)
-    logger.addHandler(console)
-    self._built = True
+    # Stream Handler
+    stream = logging.StreamHandler()
+    stream.setLevel(stream_level)
+    stream.setFormatter(formatter)
+    logger.addHandler(stream)
+    Logger.built = True
 
-  def debug(self, msg, name=__name__, **kwargs):
-    """Logger.debug
+  @staticmethod
+  def base_function(level: str, name=__name__):
+    """Base Log Function
 
-      DEBUG级别的日志
-
-      Args:
-        msg: Str. 日志内容
-        name: Str, default __name__. 可指定名称
-            传入`__name__`可用于定位日志的发送位置
-        **kwargs: 参见logging.debug
-      
-      NOTE:
-        若Logger未被初始化，则使用默认的Stream进行控制台打印
-    """
-    self._check_built()
-    logging.getLogger(name).debug(msg, **kwargs)
-
-  def info(self, msg, name=__name__, **kwargs):
-    """Logger.info
-
-      INFO级别的日志
+      Get the log function based on the level and name
 
       Args:
-        msg: Str. 日志内容
-        name: Str, default __name__. 可指定名称
-            传入`__name__`可用于定位日志的发送位置
-        **kwargs: 参见logging.info
-      
-      NOTE:
-        若Logger未被初始化，则使用默认的Stream进行控制台打印
-      
-      Alias:
-        log
-        loghere
+        level: Str. The log level
+        name: Str. The log name
+            Default __name__, the log location
+
+      Returns:
+        python.function: log_func
     """
-    self._check_built()
-    logging.getLogger(name).info(msg, **kwargs)
+    Logger.assert_built()
+    level = level.upper()
+    _Logger = logging.getLogger(name)
+    level_to_function = {
+        "DEBUG": _Logger.debug,
+        "INFO": _Logger.info,
+        "LOG": _Logger.info,
+        "WARNING": _Logger.warning,
+        "WARN": _Logger.warning,
+        "ERROR": _Logger.error,
+        "CRITICAL": _Logger.critical,
+        "FATAL": _Logger.critical,
+        "EXCEPTION": _Logger.exception}
+    level_to_exit = [
+        "ERROR",
+        "CRITICAL",
+        "FATAL",
+        "EXCEPTION"]
+    def log_func(
+        msg: str,
+        exit=False,
+        **kwargs):
+      """The actual logging function
 
-  log = info
-  loghere = info
+        Args:
+          msg: Str. The log message
+          exit: Boolean. If True, exit the program after log
+          **kwargs: other keyword arguments
+      """
+      level_to_function[level](msg, **kwargs)
+      if level in level_to_function and exit:
+        os._exit(0)
+    return log_func
 
-  def warning(self, msg, name=__name__, **kwargs):
-    """Logger.warning
-
-      WARNING级别的日志
+  @staticmethod
+  def batch(
+      inputs,
+      level="INFO",
+      name=__name__,
+      perfix="",
+      suffix="",
+      **kwargs):
+    """Log with a batch of messages
 
       Args:
-        msg: Str. 日志内容
-        name: Str, default __name__. 可指定名称
-            传入`__name__`可用于定位日志的发送位置
-        **kwargs: 参见logging.warning
-      
-      NOTE:
-        若Logger未被初始化，则使用默认的Stream进行控制台打印
-      
-      Alias:
-        warn
+        inputs: a List of Str. The log messages
+        level: Str. The log level
+        name: Str. The log name
+            Default __name__, the log location
+        perfix: Str. The prefix for the log messages
+        suffix: Str. The suffix for the log messages
+        **kwargs: other keyword arguments
     """
-    self._check_built()
-    logging.getLogger(name).warning(msg, **kwargs)
-
-  warn = warning
-
-  def error(self, msg, name=__name__, exit=False, **kwargs):
-    """Logger.error
-
-      ERROR级别的日志
-
-      Args:
-        msg: Str. 日志内容
-        name: Str, default __name__. 可指定名称
-            传入`__name__`可用于定位日志的发送位置
-        exit: Bool, default False. 
-            传入`True`可在记录日志后退出程序
-        **kwargs: 参见logging.error
-      
-      NOTE:
-        若Logger未被初始化，则使用默认的Stream进行控制台打印
-    """
-    self._check_built()
-    logging.getLogger(name).error(msg, **kwargs)
-    if exit:
-      os._exit(0)
-
-  def critical(self, msg, name=__name__, exit=False, **kwargs):
-    """Logger.critical
-
-      CRITICAL级别的日志
-
-      Args:
-        msg: Str. 日志内容
-        name: Str, default __name__. 可指定名称
-            传入`__name__`可用于定位日志的发送位置
-        exit: Bool, default False. 
-            传入`True`可在记录日志后退出程序
-        **kwargs: 参见logging.critical
-      
-      NOTE:
-        若Logger未被初始化，则使用默认的Stream进行控制台打印
-      
-      Alias:
-        fatal
-    """
-    self._check_built()
-    logging.getLogger(name).critical(msg, **kwargs)
-    if exit:
-      os._exit(0)
-
-  fatal = critical
-
-  def exception(self, msg='Exception Logged', name=__name__,
-        exit=False, **kwargs):
-    """Logger.exception
-
-      记录异常日志，日志等级为ERROR
-
-      Args:
-        msg: Str, default 'Exception Logged'. 提示捕抓异常日志的语句
-        name: Str, default __name__. 可指定名称
-            传入`__name__`可用于定位日志的发送位置
-        exit: Bool, default False. 
-            传入`True`可在记录日志后退出程序
-        **kwargs: 参见logging.exception
-      
-      NOTE:
-        若Logger未被初始化，则使用默认的Stream进行控制台打印
-    """
-    self._check_built()
-    logging.getLogger(name).exception(msg, **kwargs)
-    if exit:
-      os._exit(0)
-
-  def batch(self, inputs, level='INFO', name=__name__, prefix='',
-        suffix='', **kwargs):
-    """Logger.batch
-
-    批量输出日志
-
-    Args:
-      inputs: List of Str. 列表形式的日志内容
-      level: Str, default 'INFO'. 日志等级，默认为INFO，大小写均可
-          可选的等级有：
-          DEBUG
-          INFO
-          WARNING
-          ERROR
-          CRITICAL
-      name: Str, default __name__. 可指定名称
-        传入`__name__`可用于定位日志的发送位置
-      prefix: Str, default ''. 前缀日志内容
-      suffix: Str, default ''. 后缀日志内容
-      **kwargs: 参见logging.info
-
-    NOTE:
-      若Logger未被初始化，则使用默认的Stream进行控制台打印
-    """    
-    level_dict = {
-        "DEBUG": self.debug,
-        "INFO": self.info,
-        "WARNING": self.warning,
-        'ERROR': self.error,
-        "CRITICAL": self.critical}
-    # level = level.upper()
+    level = level.upper()
     try:
-      log_func = level_dict[level.upper()]
+      func = Logger.base_function(level, name)
+      for msg in inputs:
+        func(f"{perfix}{msg}{suffix}", **kwargs)
     except KeyError:
-      log_func = self.info
-    for msg in inputs:
-      log_func(prefix + msg + suffix, name=name, **kwargs)
-
-
-logger = Logger()
-
-
-def build(filename: str, detail=True, suffix='.log', filemode='a+',
-      fmt="%(asctime)s.%(msecs)03d [%(levelname)s] >%(name)s: %(message)s",
-      datefmt="%Y-%m-%d %H:%M:%S"):
-  """log.build
-    
-    日志工具初始化函数。
-
-    Args:
-      filename: Str. 日志文件名，包含路径。如果文件名不带有后缀名，会自动补上
-          若文件名为空，则不输出日志文件
-      detail: Bool. 日志写文件粒度。默认最低为DEBUG。
-          若值为False，则写文件的最低等级为INFO
-      suffix: Str. 日志文件后缀名，默认为'.log'
-      filemode: Str. 日志文件的打开方式，同open.mode，默认'a+'为追加写入
-      fmt: Str. 日志输出的格式，详见python.logging.Formatter
-      datefmt: Str. 日志输出格式中的时间格式，详见python.logging.Formatter
-  """
-  logger.build(
-      filename,
-      detail=detail,
-      suffix=suffix,
-      filemode=filemode,
-      fmt=fmt,
-      datefmt=datefmt,)
+      Logger.base_function("WARNING", ", ".join([
+          f"WARNING",
+          f"excepted level {except_level}",
+          f"got {level}"]))
 
 
 def debug(msg, name=__name__, **kwargs):
-  """log.debug
-
-    DEBUG级别的日志
+  """Log with DEBUG level
 
     Args:
-      msg: Str. 日志内容
-      name: Str, default __name__. 可指定名称
-          传入`__name__`可用于定位日志的发送位置
-      **kwargs: 参见logging.debug
-      
-    NOTE:
-      若Logger未被初始化，则使用默认的Stream进行控制台打印
+      msg: Str. The log message
+      name: Str. The log name
+          Default __name__, the log location
+      **kwargs: other keyword arguments
   """
-  logger.debug(msg, name, **kwargs)
+  Logger.base_function("DEBUG", name=name)(msg, **kwargs)
 
 
 def info(msg, name=__name__, **kwargs):
-  """log.info
-
-    INFO级别的日志
+  """Log with INFO level
 
     Args:
-      msg: Str. 日志内容
-      name: Str, default __name__. 可指定名称
-          传入`__name__`可用于定位日志的发送位置
-      **kwargs: 参见logging.info
-      
-    NOTE:
-      若Logger未被初始化，则使用默认的Stream进行控制台打印
-    
-    Alias:
-      log
-      loghere
+      msg: Str. The log message
+      name: Str. The log name
+          Default __name__, the log location
+      **kwargs: other keyword arguments
   """
-  logger.info(msg, name, **kwargs)
+  Logger.base_function("INFO", name=name)(msg, **kwargs)
 
 
 log = info
-loghere = info
 
 
 def warning(msg, name=__name__, **kwargs):
-  """log.warning
-
-    WARNING级别的日志
+  """Log with WARNING level
 
     Args:
-      msg: Str. 日志内容
-      name: Str, default __name__. 可指定名称
-          传入`__name__`可用于定位日志的发送位置
-      **kwargs: 参见logging.warning
-    
-    NOTE:
-      若Logger未被初始化，则使用默认的Stream进行控制台打印
-    
-    Alias:
-      warn
+      msg: Str. The log message
+      name: Str. The log name
+          Default __name__, the log location
+      **kwargs: other keyword arguments
   """
-  logger.warning(msg, name, **kwargs)
+  Logger.base_function("WARNING", name=name)(msg, **kwargs)
 
 
 warn = warning
 
 
-def error(msg, name=__name__, **kwargs):
-  """Logger.error
-
-    ERROR级别的日志
+def error(msg, name=__name__, exit=False, **kwargs):
+  """Log with ERROR level
 
     Args:
-      msg: Str. 日志内容
-      name: Str, default __name__. 可指定名称
-          传入`__name__`可用于定位日志的发送位置
-      exit: Bool, default False. 
-          传入`True`可在记录日志后退出程序
-      **kwargs: 参见logging.error
-    
-    NOTE:
-      若Logger未被初始化，则使用默认的Stream进行控制台打印
+      msg: Str. The log message
+      name: Str. The log name
+          Default __name__, the log location
+      exit: Boolean. If True, exit the program after log
+      **kwargs: other keyword arguments
   """
-  logger.error(msg, name, **kwargs)
+  Logger.base_function("ERROR", name=name)(msg, exit=exit, **kwargs)
 
 
-def critical(msg, name=__name__, **kwargs):
-  """log.critical
-
-    CRITICAL级别的日志
+def critical(msg, name=__name__, exit=False, **kwargs):
+  """Log with CRITICAL level
 
     Args:
-      msg: Str. 日志内容
-      name: Str, default __name__. 可指定名称
-          传入`__name__`可用于定位日志的发送位置
-      exit: Bool, default False. 
-          传入`True`可在记录日志后退出程序
-      **kwargs: 参见logging.critical
-    
-    NOTE:
-      若Logger未被初始化，则使用默认的Stream进行控制台打印
-    
-    Alias:
-      fatal
+      msg: Str. The log message
+      name: Str. The log name
+          Default __name__, the log location
+      exit: Boolean. If True, exit the program after log
+      **kwargs: other keyword arguments
   """
-  logging.critical(msg, name, **kwargs)
-
+  Logger.base_function("CRITICAL", name=name)(msg, exit=exit, **kwargs)
+  
 
 fatal = critical
 
 
 def exception(msg='Exception Logged', name=__name__, exit=False, **kwargs):
-  """log.exception
-
-    记录异常日志，日志等级为ERROR
+  """Log with Exception
 
     Args:
-      msg: Str, default 'Exception Logged'. 提示捕抓异常日志的语句
-      name: Str, default __name__. 可指定名称
-          传入`__name__`可用于定位日志的发送位置
-      exit: Bool, default False. 
-          传入`True`可在记录日志后退出程序
-      **kwargs: 参见logging.exception
-    
-    NOTE:
-      若Logger未被初始化，则使用默认的Stream进行控制台打印
+      msg: Str. The log message
+      name: Str. The log name
+          Default __name__, the log location
+      exit: Boolean. If True, exit the program after log
+      **kwargs: other keyword arguments
   """
-  logger.exception(msg, name, exit, **kwargs)
+  Logger.base_function("EXCEPTION", name=name)(msg, exit=exit, **kwargs)
 
 
-def batch(inputs, level='INFO', name=__name__, prefix='', suffix='',
-      **kwargs):
-  """Logger.batch
-
-    批量输出日志
-
-    Args:
-      inputs: List of Str. 列表形式的日志内容
-      level: Str, default 'INFO'. 日志等级，默认为INFO，大小写均可
-          可选的等级有：
-          DEBUG
-          INFO
-          WARNING
-          ERROR
-          CRITICAL
-      name: Str, default __name__. 可指定名称
-        传入`__name__`可用于定位日志的发送位置
-      prefix: Str, default ''. 前缀日志内容
-      suffix: Str, default ''. 后缀日志内容
-      **kwargs: 参见logging.info
-
-    NOTE:
-      若Logger未被初始化，则使用默认的Stream进行控制台打印
-  """ 
-  logger.batch(inputs, level, name, prefix, suffix, **kwargs)   
+base_function = Logger.base_function
+build = Logger.build
+batch = Logger.batch
 
 
+# Test Part
 if __name__ == "__main__":
-  logger.loghere("test")
-  logger.loghere("test")
-  logger.build("unpush/test")
-  logger.loghere("test1")
-  logger.debug("test2")
-  logger.batch(['test3', 'test4'], 'warning')
-  logger.error('test5')
-  logger.critical('test6', exit=True)
-  logger.loghere("test7")
+  base_function("debug")("hello")
+  base_function("info")("hello")
+  build('./unpush/')
+  debug("Log with DEBUG")
+  info("Log with INFO")
+  warning("Log with WARNING")
+  error("Log with ERROR")
+  critical("Log with CRITICAL")
+  batch(["Log batch 1", "Log batch 2"], level="INFO", name='app')
+  error("Log with exit, you can see the next log", exit=True)
+  info("You can not see this log")
+  # Stream Out
+  # ================
+  # [WARNING] Logger has not been built, this message will only log once.
+  # DEBUG:__main__:hello
+  # INFO:__main__:hello
+  # 2020-07-27 22:05:10.300 [INFO] >__main__: Log with INFO
+  # 2020-07-27 22:05:10.301 [WARNING] >__main__: Log with WARNING
+  # 2020-07-27 22:05:10.302 [ERROR] >__main__: Log with ERROR
+  # 2020-07-27 22:05:10.303 [CRITICAL] >__main__: Log with CRITICAL
+  # 2020-07-27 22:05:10.304 [INFO] >app: Log batch 1
+  # 2020-07-27 22:05:10.304 [INFO] >app: Log batch 2
+  # 2020-07-27 22:05:10.305 [ERROR] >__main__: Log with exit, you can see the next log
+  # File Out
+  # =================
+  # 2020-07-27 22:09:07.792 [DEBUG] >__main__: Log with DEBUG
+  # 2020-07-27 22:09:07.792 [INFO] >__main__: Log with INFO
+  # 2020-07-27 22:09:07.793 [WARNING] >__main__: Log with WARNING
+  # 2020-07-27 22:09:07.794 [ERROR] >__main__: Log with ERROR
+  # 2020-07-27 22:09:07.795 [CRITICAL] >__main__: Log with CRITICAL
+  # 2020-07-27 22:09:07.796 [INFO] >app: Log batch 1
+  # 2020-07-27 22:09:07.809 [INFO] >app: Log batch 2
+  # 2020-07-27 22:09:07.810 [ERROR] >__main__: Log with exit, you can see the next log
 
