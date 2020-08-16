@@ -2,11 +2,11 @@
 """Deep Go
   ======
 
-  An framework for machine learning and deep learning.
+  An framework for Deep Learning
   
   Version:
-    4.1 - alpha
-
+    Aiur 0.1.0
+  
   Author:
     York Su
 """
@@ -20,21 +20,8 @@ if this_dir not in _sys.path:
 del _os, _sys
 
 
-from deepgo import app
-from deepgo import core
-from deepgo import framework
-
-from deepgo.app import dataset as ds
-from deepgo.app import train
-
-from deepgo.core import api
-from deepgo.core import exception
-from deepgo.core import io
-from deepgo.core import layer
-from deepgo.core.api import np
-
-from deepgo.framework import log
-from deepgo.framework.config import Config
-from deepgo.framework.dataset import Dataset
-from deepgo.framework.generator import Generator
+__version__ = "0.1.0"
+__codename__ = "Aiur"
+__release_date__ = "2020-08-16"
+__author__ = "York Su"
 
