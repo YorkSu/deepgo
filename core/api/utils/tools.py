@@ -40,3 +40,14 @@ class Timer(Context):
     # TODO: use io.StreamIO
     print(f"This Codes Cost: {cost} Seconds.")
 
+
+def normalize_tuple(obj, rank):
+  """Ensure Object is a tuple of Integer and length equal rank"""
+  if isinstance(obj, (list, tuple)):
+    if len(obj) == rank:
+      return tuple(obj)
+    raise ValueError(f"Expected a list/tuple of rank {rank}, got {len(obj)}")
+  if isinstance(obj, int):
+    return tuple([obj for _ in range(rank)])
+  raise ValueError(f"Expected a int/list/tuple, got {obj.__class__.__name__}")
+

@@ -11,6 +11,7 @@ __all__ = [
     'Add',
     'Average',
     'Concatenate',
+    'Dot',
     'Maximum',
     'Minimum',
     'Multiply',

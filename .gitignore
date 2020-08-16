@@ -1,6 +1,7 @@
 # Custom
 unpush/
-.vscode/*
+.vscode/
+conf.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

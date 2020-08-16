@@ -129,7 +129,7 @@ class H5pyIO(IO):
     if not os.path.exists(_path):
       os.makedirs(_path)
     if ext != suffix:
-      _filename = _path + _name + suffix
+      _filename = os.path.join(_path, _name) + suffix
     return _filename
 
   @staticmethod

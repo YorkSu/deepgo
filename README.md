@@ -25,6 +25,11 @@ Deep Go is an framework for machine learning and deep learning.
 conda create -n deepgo python=3.7.7 --yes
 conda activate deepgo
 conda install tensorflow-gpu=2.1.0 --yes
+conda install jupyter notebook --yes
+conda install opencv --yes
+conda install matplotlib --yes
+conda install pillow --yes
+conda install networkx --yes
 ```
 
 `deepgo` is the name of the environment, you can use your favorite name.

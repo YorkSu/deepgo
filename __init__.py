@@ -5,7 +5,7 @@
   An framework for machine learning and deep learning.
   
   Version:
-    4.1 - alpha
+    4.1 - beta
 
   Author:
     York Su
@@ -33,7 +33,7 @@ from deepgo.core import io
 from deepgo.core import layer
 from deepgo.core.api import np
 
-from deepgo.framework import log
+# from deepgo.framework import log
 from deepgo.framework.config import Config
 from deepgo.framework.dataset import Dataset
 from deepgo.framework.generator import Generator
