@@ -17,11 +17,12 @@ Deep Go 是一个深度学习框架。
 ```cmd
 conda create -n deepgo python=3.7.7 --yes
 conda activate deepgo
-conda install tensorflow-gpu=2.1.0 --yes
-conda install opencv --yes
-conda install matplotlib --yes
-conda install pillow --yes
+conda install tensorflow-gpu=2.1.0 --yes  # GPU is recommended
+conda install opencv --yes  # Optional
+conda install matplotlib --yes  # Optional
+conda install pillow --yes  # Optional
 conda install jupyter notebook --yes  # Optional
+conda install pylint --yes  # Optional
 ```
 
 `deepgo` 是虚拟环境的名字，你可以使用你喜欢的名字。
