@@ -6,43 +6,51 @@
 """
 
 
+__all__ = [
+    'Command',
+    'VersionCommand',
+    'ExitCommand',]
+
+
 import abc
-from deepgo import __version__, __codename__, __release_date__
-from deepgo.core.pattern.singleton import AbstractSingleton, abstractmethod
 
-
-class Request(abc.ABC):
-  """Title
-
-    Description
-  """
-  @abc.abstractmethod
-  def get(self): ...
-
-  @abc.abstractmethod
-  def post(self): ...
+from deepgo.shell.response import Response
 
 
 class Command(abc.ABC):
-  """Title
-
-    Description
-  """
+  """Command Interface"""
   @abc.abstractmethod
-  def execute(self): ...
+  def execute(self, *args, **kwargs): ...
 
 
-class AbstractCommand(Command):
-  """Title
-
-    Description
+class VersionCommand(Command):
+  """Version Command
+  
+    Provide version information
   """
-  def __init__(self):
-    ...
+  def execute(self, *args, **kwargs):
+    from deepgo import __version__, __codename__, __release_date__
+    response = Response()
+    
+    count = 1
+    for arg in args:
+      if arg in ['more']:
+        count = 2
+    if 'count' in kwargs:
+      count = int(kwargs.pop('count'))
+    
+    if count < 1:
+      response.message = f"Version: Invalid count: {count}"
+    elif count == 1:
+      response.message = f"Deep Go {__version__}"
+    else:
+      response.message = f"Deep Go {__version__} [{__codename__} {__release_date__}]"
+    return response
 
 
-
-
-
-
+class ExitCommand(Command):
+  """Exit Command"""
+  def execute(self, *args, **kwargs):
+    import os
+    os._exit(0)
 

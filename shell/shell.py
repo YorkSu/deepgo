@@ -7,24 +7,14 @@
 
 
 import argparse
-from deepgo import __version__, __codename__, __release_date__
-from deepgo.core.pattern.singleton import AbstractSingleton, abstractmethod
-from deepgo.shell.request import VersionRequest
+
+from deepgo.shell.interpreter import Parser, interpreter
 
 
-class AbstractShell(AbstractSingleton):
-  """Abstract Shell Class
-
-    This is a Abstract Singleton Class
-  """
-  @abstractmethod
-  def parse(self): ...
-
-
-class Shell(AbstractShell):
+class Shell(Parser):
   """Deep Go Shell Class
 
-    Handle with arguments
+    Handle with sys.args
 
     This is a Singleton Class
   """
@@ -39,15 +29,6 @@ class Shell(AbstractShell):
 
   def parse(self):
     """Parse the command line arguments"""
-    # print("Argument Parser")  # DEBUG
     if self.args.version:
-      # self.parse_version()
-      request = VersionRequest()
-      # print("Get Request")  # DEBUG
-      response = request.get(self.args.version)
-      # print("Get Response")  # DEBUG
-      # print("Parse Response")  # DEBUG
-      print(response.message)
-      # print("Exit")  # DEBUG
-      return  # Exit
+      interpreter.parse(f"version count={self.args.version} & exit")
 
