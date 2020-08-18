@@ -6,13 +6,15 @@
 """
 
 
-class BaseOperation(object):
+import abc
+
+
+class AbstractOperation(abc.ABC):
   """Title
 
     Description
   """
 
 
-class Operation(BaseOperation):
-  pass
+class Operation(AbstractOperation): ...
 
