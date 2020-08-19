@@ -9,7 +9,8 @@
 __all__ = [
     'Command',
     'VersionCommand',
-    'ExitCommand',]
+    'ExitCommand',
+    'ProjectCommand',]
 
 
 import abc
@@ -53,4 +54,25 @@ class ExitCommand(Command):
   def execute(self, *args, **kwargs):
     import os
     os._exit(0)
+
+
+class ProjectCommand(Command):
+  """Project Command
+  
+    Help to Generate a project for Deep Learning
+  """
+  def execute(self, *args, **kwargs):
+    from deepgo.core.kernel.path import path as _path
+    response = Response()
+    if not args and not kwargs:
+      response.message = f"Expected path argument"
+      return response
+    path = ''
+    if args:
+      path = args[0]
+    if 'path' in kwargs:
+      path = kwargs['path']
+    path = _path.abs(path)
+    response.message = f"Generated Project: {path}"
+    return response
 

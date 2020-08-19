@@ -57,7 +57,8 @@ class CommandParser(Parser):
   def __init__(self):
     self.command_map = {
         "VERSION": VersionCommand(),
-        "EXIT": ExitCommand(),}
+        "EXIT": ExitCommand(),
+        "PROJECT": ProjectCommand(),}
 
   def parse(self, expression: str) -> Command:
     expression = expression.strip().upper()

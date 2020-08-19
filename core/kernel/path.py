@@ -17,6 +17,10 @@ class Path(Singleton):
 
     This is a Singleton Class
   """
+  def abs(self, path):
+    """os.path.abspath"""
+    return os.path.abspath(path)
+
   def cd(self):
     """Get Current Directory"""
     return os.path.dirname(self.crf())
