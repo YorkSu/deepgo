@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
-"""Deep Go Core
+"""Deep Go Kernel
   ======
 
-  Description
+  Kernel Classes
 """
+
+
+
+
 

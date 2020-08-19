@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""Deep Go Core
+"""Deep Go Patterns
   ======
 
-  Description
+  Design Patterns
 """
 
