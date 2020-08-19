@@ -3,7 +3,7 @@
 Deep Go 是一个深度学习框架。
 
 ![codename](https://img.shields.io/badge/codename-Aiur-green.svg)
-![version](https://img.shields.io/badge/version-0.1.0-yellow.svg)
+![version](https://img.shields.io/badge/version-0.1.1-yellow.svg)
 [![wiki](https://img.shields.io/badge/WIKI-yes-green.svg)](https://wiki.yorksu.cn/deepgo/deepgo)
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-2.1.0-green.svg)
 ![License](https://img.shields.io/badge/License-Apache--2.0-green.svg)

@@ -13,7 +13,7 @@
 
 
 __author__ = "York Su"
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __codename__ = "Aiur"
 __release_date__ = "2020-08-16"
 
