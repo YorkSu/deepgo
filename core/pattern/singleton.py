@@ -6,8 +6,11 @@
 """
 
 
-from abc import ABCMeta, abstractmethod
+import abc
 import threading
+
+
+abstractmethod = abc.abstractmethod
 
 
 class SingletonMetaclass(type):
@@ -30,7 +33,7 @@ class SingletonMetaclass(type):
     return cls.__instance
 
 
-class AbstractSingletonMetaclass(ABCMeta, SingletonMetaclass):
+class AbstractSingletonMetaclass(abc.ABCMeta, SingletonMetaclass):
   """Abstract Singleton Metaclass
 
     Use this metaclass to create a Abstract Singleton Class.

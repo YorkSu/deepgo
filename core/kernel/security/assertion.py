@@ -10,7 +10,7 @@
 
 from deepgo.core.pattern.singleton import AbstractSingleton, abstractmethod
 from deepgo.core.kernel.loader import lazy_loader
-from deepgo.core.kernel.security import exception
+from deepgo.core.security import exception
 
 
 class Assertion(AbstractSingleton):
